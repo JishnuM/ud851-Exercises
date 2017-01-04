@@ -16,4 +16,5 @@
 <resources>
     <string name="app_name">RecyclerView</string>
     <string name="action_reset">Reset</string>
+    <string name="on_click_toast">You have clicked on item %d</string>
 </resources>
