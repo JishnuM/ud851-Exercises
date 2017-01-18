@@ -59,4 +59,6 @@
     <!-- Value in SharedPreferences for green color option -->
     <string name="pref_color_green_value" translatable="false">green</string>
 
+    <!-- Text displayed on invalid size entered -->
+    <string name="toast_invalid_size">Please select a number betweeen 0 (exclusive) and 3 inclusive</string>
 </resources>
