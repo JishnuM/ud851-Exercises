@@ -17,10 +17,12 @@
 package com.example.android.todolist.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
@@ -78,16 +80,32 @@ public class TaskContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        // TODO (1) Get access to the task database (to write new data to)
+        // COMPLETED (1) Get access to the task database (to write new data to)
+        final SQLiteDatabase db = mTaskDbHelper.getWritableDatabase();
+        // COMPLETED (2) Write URI matching code to identify the match for the tasks directory
+        int match = sUriMatcher.match(uri);
+        // COMPLETED (3) Insert new values into the database
+        // COMPLETED (4) Set the value for the returnedUri and write the default case for unknown URI's
+        Uri returnUri;
 
-        // TODO (2) Write URI matching code to identify the match for the tasks directory
+        switch (match) {
+            // Only support the no id case. With id use update.
+            case TASKS:
+                long id = db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(TaskContract.TaskEntry.CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unkown uri : " + uri);
+        }
 
-        // TODO (3) Insert new values into the database
-        // TODO (4) Set the value for the returnedUri and write the default case for unknown URI's
+        // COMPLETED (5) Notify the resolver if the uri has been changed, and return the newly inserted URI
+        getContext().getContentResolver().notifyChange(uri, null);
 
-        // TODO (5) Notify the resolver if the uri has been changed, and return the newly inserted URI
-
-        throw new UnsupportedOperationException("Not yet implemented");
+        return returnUri;
     }
 
 
